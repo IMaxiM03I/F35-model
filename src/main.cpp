@@ -46,6 +46,7 @@ void setup() {
     Serial.println("    Init Flight Control Check...");
 
     // flight control check
+    leftOuterFlap.performCheck();
 }
 
 void loop() {
