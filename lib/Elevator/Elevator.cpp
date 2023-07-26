@@ -1,3 +1,3 @@
 #include "Elevator.h"
 
-Elevator::Elevator(byte pin): FlightControlSurface::FlightControlSurface(pin) {}
+Elevator::Elevator(byte servo_pins[]): FlightControlSurface::FlightControlSurface(servo_pins) {}

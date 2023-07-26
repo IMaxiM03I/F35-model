@@ -1,3 +1,3 @@
 #include "Rudder.h"
 
-Rudder::Rudder(byte pin): FlightControlSurface::FlightControlSurface(pin) {}
+Rudder::Rudder(byte servo_pins[]): FlightControlSurface::FlightControlSurface(servo_pins) {}

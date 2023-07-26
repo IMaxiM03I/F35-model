@@ -1,17 +1,31 @@
 #include"FlightControlSurface.h"
 
-FlightControlSurface::FlightControlSurface(byte pin) {
+#define GET_ARRAY_SIZE(array) (sizeof(array)/sizeof(array[0]))
 
-    this->pin = pin;
+FlightControlSurface::FlightControlSurface(byte servo_pins[]) {
+
+    size_t n_servo_pins = GET_ARRAY_SIZE(servo_pins);
+    size_t n_servos = GET_ARRAY_SIZE(servos);
+    #if n_servo_pins != n_servos
+    #error "Number of servo pins does not match number of servos"
+    #endif
+
     this->angle = IDLE_SERVO_ANGLE;
     this->target_angle = IDLE_SERVO_ANGLE;
-    servo.attach(pin);
+    
+    for (size_t i = 0; i < GET_ARRAY_SIZE(servos); i++) {
+        servos[i] = Servo();
+        servos[i].attach(servo_pins[i]);
+    }
 
 }
 
-void FlightControlSurface::moveServo() {
-    servo.write(angle);
-    delay(15);
+void FlightControlSurface::moveServos() {
+    
+    for (Servo servo : servos)
+        servo.write(angle);
+    delay(SERVO_DELAY);
+
 }
 
 int FlightControlSurface::getAngle() {
@@ -20,10 +34,6 @@ int FlightControlSurface::getAngle() {
 
 void FlightControlSurface::setAngle(int new_angle) {
     this->target_angle = new_angle;
-}
-
-Servo FlightControlSurface::getServo() { 
-    return servo;
 }
 
 void FlightControlSurface::move() {
@@ -38,7 +48,7 @@ void FlightControlSurface::move() {
     } else if (angle != target_angle)
         angle = target_angle;
     
-    moveServo();
+    moveServos();
 }
 
 void FlightControlSurface::elevate() {
@@ -55,9 +65,19 @@ void FlightControlSurface::center() {
 
 void FlightControlSurface::performCheck() {
 
+    auto wait = [](int target, int actual) {
+        while (target != actual)
+            continue;
+    };
+
     elevate();
+    wait(target_angle, angle);
     center();
+    wait(target_angle, angle);
+
     lower();
+    wait(target_angle, angle);
     center();
+    wait(target_angle, angle);
 
 }

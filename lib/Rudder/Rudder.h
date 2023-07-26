@@ -2,8 +2,12 @@
 
 class Rudder: public FlightControlSurface {
 
+    protected:
+
+        Servo servos[1];
+
     public:
 
-        Rudder(byte pin);
+        Rudder(byte servo_pins[]);
 
 };

@@ -1,3 +1,3 @@
 #include "Flap.h"
 
-Flap::Flap(byte pin): FlightControlSurface::FlightControlSurface(pin) {}
+Flap::Flap(byte servo_pins[]): FlightControlSurface::FlightControlSurface(servo_pins) {}

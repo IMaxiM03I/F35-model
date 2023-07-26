@@ -2,8 +2,12 @@
 
 class Elevator: public FlightControlSurface {
 
+    protected:
+
+        Servo servos[1];
+
     public:
 
-        Elevator(byte pin);
+        Elevator(byte servo_pins[]);
 
 };

@@ -21,34 +21,55 @@
 #define LEFT_ELEVATOR_PIN 0
 #define RIGHT_ELEVATOR_PIN 0
 
+// MAPPINGS //
+
+// flight control surfaces
+
+#define LEFT 0
+#define RIGHT 1
+
 // <-- FUNCTIONS --> //
 
 // <-- OBJECTS --> //
 
 // flight control surfaces
 
-Flap leftOuterFlap(LEFT_OUTER_FLAP_PIN);
-Flap leftInnerFlap(LEFT_INNER_FLAP_PIN);
-Flap rightOuterFlap(RIGHT_INNER_FLAP_PIN);
-Flap rightInnerFlap(RIGHT_INNER_FLAP_PIN);
+// Flap flaps[] = {Flap({LEFT_INNER_FLAP_PIN, LEFT_OUTER_FLAP_PIN}), Flap({RIGHT_INNER_FLAP_PIN, RIGHT_OUTER_FLAP_PIN})};       // doesn't work
+// Flap flaps[] = {Flap({LEFT_INNER_FLAP_PIN}), Flap({RIGHT_INNER_FLAP_PIN})};                                                  // works
+byte left_flap_pins[] = {LEFT_INNER_FLAP_PIN, LEFT_OUTER_FLAP_PIN};
+byte right_flap_pins[] = {RIGHT_INNER_FLAP_PIN, RIGHT_OUTER_FLAP_PIN};
+Flap flaps[] = {Flap(left_flap_pins), Flap(right_flap_pins)};
 
-Rudder leftRudder(LEFT_RUDDER_PIN);
-Rudder rightRudder(RIGHT_RUDDER_PIN);
+byte left_rudder_pins[] = {LEFT_RUDDER_PIN};
+byte right_rudder_pins[] = {RIGHT_RUDDER_PIN};
+Rudder rudders[] = {Rudder(left_rudder_pins), Rudder(right_rudder_pins)};
 
-Elevator leftElevator(LEFT_ELEVATOR_PIN);
-Elevator rightElevator(RIGHT_ELEVATOR_PIN);
+byte left_elev_pins[] = {LEFT_ELEVATOR_PIN};
+byte right_elev_pins[] = {RIGHT_ELEVATOR_PIN};
+Elevator elevators[] = {Elevator(left_elev_pins), Elevator(right_elev_pins)};
+
+FlightControlSurface all_fcs[] = {flaps[LEFT], flaps[RIGHT],
+                                    rudders[LEFT], rudders[RIGHT],
+                                    elevators[LEFT], elevators[RIGHT]};
 
 void setup() {
     Serial.begin(9600);
 
     Serial.println("Hello World!\n\n<----------------------->\n\n");
     Serial.println("initializing start-up procedure...");
-    Serial.println("    Init Flight Control Check...");
+    Serial.print("    Init Flight Control Check...");
 
     // flight control check
-    leftOuterFlap.performCheck();
+    for (FlightControlSurface fcs : all_fcs)
+        fcs.performCheck();
+    
+    Serial.println("");
 }
 
 void loop() {
-  // put your main code here
+
+    // UPDATE SERVO POSITION
+    for (FlightControlSurface fcs : all_fcs)
+        fcs.move();
+
 }
