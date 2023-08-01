@@ -38,6 +38,8 @@ class FlightControlSurface {
         
         void setAngle(int new_angle);
 
+        int mapAngleFrom(int value, int min, int max);
+
         void move();
 
         void elevate();

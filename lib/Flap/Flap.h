@@ -4,7 +4,7 @@ class Flap: public FlightControlSurface {
 
     protected:
 
-        Servo servos[2];
+        Servo servos[1];
 
     public:
 

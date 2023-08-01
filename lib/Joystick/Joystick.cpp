@@ -9,6 +9,8 @@ int Joystick::getMinAnalogValue() { return MIN_ANALOG_VALUE; }
 
 int Joystick::getMaxAnalogValue() { return MAX_ANALOG_VALUE; }
 
+int Joystick::getIdleAnalogValue() { return IDLE_ANALOG_VALUE; }
+
 Joystick::Joystick(byte xpin, byte ypin) {
     x_pin = xpin;
     y_pin = ypin;

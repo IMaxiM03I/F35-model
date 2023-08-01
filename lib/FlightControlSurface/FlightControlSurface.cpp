@@ -52,6 +52,10 @@ void FlightControlSurface::setAngle(int new_angle) {
     this->target_angle = new_angle;
 }
 
+int FlightControlSurface::mapAngleFrom(int value, int min, int max) {
+    return map(value, min, max, MIN_SERVO_ANGLE, MAX_SERVO_ANGLE);
+}
+
 void FlightControlSurface::move() {
     
     if (abs(target_angle - angle) > SERVO_TURN_RATE) {

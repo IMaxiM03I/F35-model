@@ -11,16 +11,16 @@
 
 // flight control surfaces (PWM)
 
-#define LEFT_OUTER_FLAP_PIN 0
+#define LEFT_OUTER_FLAP_PIN 3
 #define LEFT_INNER_FLAP_PIN 0
-#define RIGHT_OUTER_FLAP_PIN 0
+#define RIGHT_OUTER_FLAP_PIN 5
 #define RIGHT_INNER_FLAP_PIN 0
 
-#define LEFT_RUDDER_PIN 0
-#define RIGHT_RUDDER_PIN 0
+#define LEFT_RUDDER_PIN 6
+#define RIGHT_RUDDER_PIN 9
 
-#define LEFT_ELEVATOR_PIN 0
-#define RIGHT_ELEVATOR_PIN 0
+#define LEFT_ELEVATOR_PIN 10
+#define RIGHT_ELEVATOR_PIN 11
 
 // flight control joystick (ANALOG)
 
@@ -46,8 +46,10 @@ Joystick flight_control_joystick = Joystick(FLIGHT_CONTROL_JOYSTICK_PIN_X, FLIGH
 
 // Flap flaps[] = {Flap({LEFT_INNER_FLAP_PIN, LEFT_OUTER_FLAP_PIN}), Flap({RIGHT_INNER_FLAP_PIN, RIGHT_OUTER_FLAP_PIN})};       // doesn't work
 // Flap flaps[] = {Flap({LEFT_INNER_FLAP_PIN}), Flap({RIGHT_INNER_FLAP_PIN})};                                                  // works
-byte left_flap_pins[] = {LEFT_INNER_FLAP_PIN, LEFT_OUTER_FLAP_PIN};
-byte right_flap_pins[] = {RIGHT_INNER_FLAP_PIN, RIGHT_OUTER_FLAP_PIN};
+// byte left_flap_pins[] = {LEFT_INNER_FLAP_PIN, LEFT_OUTER_FLAP_PIN};
+// byte right_flap_pins[] = {RIGHT_INNER_FLAP_PIN, RIGHT_OUTER_FLAP_PIN};
+byte left_flap_pins[] = {LEFT_OUTER_FLAP_PIN};
+byte right_flap_pins[] = {RIGHT_OUTER_FLAP_PIN};
 Flap flaps[] = {Flap(left_flap_pins), Flap(right_flap_pins)};
 
 byte left_rudder_pins[] = {LEFT_RUDDER_PIN};
@@ -79,6 +81,31 @@ void loop() {
 
     // READ FLIGHT CONTROL JOYSTICK VALUES
     flight_control_joystick.read();
+
+    Serial.println("joystick:");
+    Serial.println("    X (0 - 1023): " + flight_control_joystick.getX());
+    Serial.println("    Y (0 - 1023): " + flight_control_joystick.getY());
+
+    // 0 if joystick X < joystick center; 1 if joystick X >= joystick center
+    // --> 0 if left;                      1 if right
+    bool turningRight = flight_control_joystick.getX() >= flight_control_joystick.getIdleAnalogValue();
+
+    // map from joystick X angle to servo angle from aileron
+    int flap_angle = flaps[turningRight].mapAngleFrom(flight_control_joystick.getX(),
+                                            flight_control_joystick.getMinAnalogValue() +
+                                                (flight_control_joystick.getIdleAnalogValue() * turningRight),
+                                            flight_control_joystick.getIdleAnalogValue() +
+                                                (flight_control_joystick.getIdleAnalogValue() * turningRight));
+    flaps[turningRight].setAngle(flap_angle);
+    Serial.println("Ailerons:\n    ");
+    Serial.println((turningRight ? "right: " : "left: ") + flap_angle);
+    
+    // mirror angle over servo center
+    int sym_flap_angle = flaps[!turningRight].getIdleServoAngle() +
+                            pow(-1, turningRight) * abs(flaps[!turningRight].getIdleServoAngle() - flap_angle);
+    flaps[!turningRight].setAngle(sym_flap_angle);
+    Serial.print("    ");
+    Serial.println((!turningRight ? "right: " : "left: ") + sym_flap_angle);
 
     // UPDATE SERVO POSITION
     for (FlightControlSurface fcs : all_fcs)
