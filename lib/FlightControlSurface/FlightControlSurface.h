@@ -8,11 +8,11 @@ class FlightControlSurface {
 
     protected:
 
-        const int MAX_SERVO_ANGLE = 180;
-        const int MIN_SERVO_ANGLE = 0;
-        const int IDLE_SERVO_ANGLE = int ((MAX_SERVO_ANGLE - MIN_SERVO_ANGLE) / 2);
-        const int SERVO_TURN_RATE = 5;
-        const int SERVO_DELAY = 15;
+        static const int MAX_SERVO_ANGLE = 180;
+        static const int MIN_SERVO_ANGLE = 0;
+        static const int IDLE_SERVO_ANGLE = int ((MAX_SERVO_ANGLE - MIN_SERVO_ANGLE) / 2);
+        static const int SERVO_TURN_RATE = 5;
+        static const int SERVO_DELAY = 15;
 
         int angle;
         int target_angle;
@@ -21,6 +21,16 @@ class FlightControlSurface {
         void moveServos();
     
     public:
+
+        static int getMaxServoAngle();
+        
+        static int getMinServoAngle();
+
+        static int getIdleServoAngle();
+
+        static int getServoTurnRate();
+
+        static int getServoDelay();
 
         FlightControlSurface(byte servo_pins[]);
 

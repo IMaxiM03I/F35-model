@@ -2,6 +2,22 @@
 
 #define GET_ARRAY_SIZE(array) (sizeof(array)/sizeof(array[0]))
 
+
+// static methods
+
+int FlightControlSurface::getMaxServoAngle() { return MAX_SERVO_ANGLE; }
+
+int FlightControlSurface::getMinServoAngle() { return MIN_SERVO_ANGLE; }
+
+int FlightControlSurface::getIdleServoAngle() { return IDLE_SERVO_ANGLE; }
+
+int FlightControlSurface::getServoTurnRate() { return SERVO_TURN_RATE; }
+
+int FlightControlSurface::getServoDelay() { return SERVO_DELAY; }
+
+
+// object methods
+
 FlightControlSurface::FlightControlSurface(byte servo_pins[]) {
 
     size_t n_servo_pins = GET_ARRAY_SIZE(servo_pins);

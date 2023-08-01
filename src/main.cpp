@@ -1,5 +1,6 @@
 #include <Arduino.h>
 
+#include "Joystick.h"
 #include "Flap.h"
 #include "Rudder.h"
 #include "Elevator.h"
@@ -8,7 +9,7 @@
 
 // PINS //
 
-// flight control surfaces
+// flight control surfaces (PWM)
 
 #define LEFT_OUTER_FLAP_PIN 0
 #define LEFT_INNER_FLAP_PIN 0
@@ -21,6 +22,11 @@
 #define LEFT_ELEVATOR_PIN 0
 #define RIGHT_ELEVATOR_PIN 0
 
+// flight control joystick (ANALOG)
+
+#define FLIGHT_CONTROL_JOYSTICK_PIN_X 0
+#define FLIGHT_CONTROL_JOYSTICK_PIN_Y 1
+
 // MAPPINGS //
 
 // flight control surfaces
@@ -32,7 +38,11 @@
 
 // <-- OBJECTS --> //
 
-// flight control surfaces
+// FLIGHT CONTROL JOYSTICK
+
+Joystick flight_control_joystick = Joystick(FLIGHT_CONTROL_JOYSTICK_PIN_X, FLIGHT_CONTROL_JOYSTICK_PIN_Y);
+
+// FLIGHT CONTROL SURFACES
 
 // Flap flaps[] = {Flap({LEFT_INNER_FLAP_PIN, LEFT_OUTER_FLAP_PIN}), Flap({RIGHT_INNER_FLAP_PIN, RIGHT_OUTER_FLAP_PIN})};       // doesn't work
 // Flap flaps[] = {Flap({LEFT_INNER_FLAP_PIN}), Flap({RIGHT_INNER_FLAP_PIN})};                                                  // works
@@ -56,17 +66,19 @@ void setup() {
     Serial.begin(9600);
 
     Serial.println("Hello World!\n\n<----------------------->\n\n");
-    Serial.println("initializing start-up procedure...");
-    Serial.print("    Init Flight Control Check...");
-
+    Serial.println("initializing start-up procedure");
+    
     // flight control check
+    Serial.print  ("    Flight Control Check...");
     for (FlightControlSurface fcs : all_fcs)
         fcs.performCheck();
-    
-    Serial.println("");
+    Serial.println("OK");
 }
 
 void loop() {
+
+    // READ FLIGHT CONTROL JOYSTICK VALUES
+    flight_control_joystick.read();
 
     // UPDATE SERVO POSITION
     for (FlightControlSurface fcs : all_fcs)
