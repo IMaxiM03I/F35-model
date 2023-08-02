@@ -11,16 +11,16 @@
 
 // flight control surfaces (PWM)
 
-#define LEFT_OUTER_FLAP_PIN 3
+#define LEFT_OUTER_FLAP_PIN 11
 #define LEFT_INNER_FLAP_PIN 0
-#define RIGHT_OUTER_FLAP_PIN 5
+#define RIGHT_OUTER_FLAP_PIN 3
 #define RIGHT_INNER_FLAP_PIN 0
 
-#define LEFT_RUDDER_PIN 6
-#define RIGHT_RUDDER_PIN 9
+#define LEFT_RUDDER_PIN 9
+#define RIGHT_RUDDER_PIN 6
 
 #define LEFT_ELEVATOR_PIN 10
-#define RIGHT_ELEVATOR_PIN 11
+#define RIGHT_ELEVATOR_PIN 5
 
 // flight control joystick (ANALOG)
 
